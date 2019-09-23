@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import axios from "axios";
+import BookList from "./BookList";
 
 // Components
 import Sidebar from "./Sidebar";
@@ -15,7 +16,8 @@ const instance = axios.create({
 class App extends Component {
   state = {
     authors: [],
-    loading: true
+    loading: true,
+    books: []
   };
 
   fetchAllAuthors = async () => {
@@ -25,10 +27,16 @@ class App extends Component {
 
   async componentDidMount() {
     try {
+      const response = await axios.get(
+        "https://the-index-api.herokuapp.com/api/books/"
+      );
       const authors = await this.fetchAllAuthors();
+      const books = response.data;
+      console.log(books);
       this.setState({
         authors: authors,
-        loading: false
+        loading: false,
+        books: books
       });
     } catch (err) {
       console.error(err);
@@ -44,10 +52,18 @@ class App extends Component {
           <Redirect exact from="/" to="/authors" />
           <Route path="/authors/:authorID" component={AuthorDetail} />
           <Route
+            path="/booklist"
+            render={props => <BookList {...props} books={this.state.books} />}
+          />
+          <Route
             path="/authors/"
             render={props => (
               <AuthorsList {...props} authors={this.state.authors} />
             )}
+          />
+          <Route
+            path="/books/:color/"
+            render={props => <BookList {...props} books={this.state.books} />}
           />
         </Switch>
       );
