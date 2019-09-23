@@ -11,42 +11,35 @@ class BookList extends Component {
   filterBooks = query => {
     query = query.toLowerCase();
 
-    let filteredBooks = this.state.BookList.filter(book => {
+    let FilterList = this.state.BookList.filter(book => {
       let title = book.title;
       return title.toLowerCase().includes(query);
     });
 
-    this.setState({ filteredBooks: filteredBooks });
+    this.setState({ filteredBooks: FilterList });
   };
-  filterColors = () => {
-    let filteredBooks = this.state.filteredBooks.filter(book => {
+  filterColor = () => {
+    return this.state.BookList.filter(book => {
       return book.color.toLowerCase().includes(this.props.match.params.color);
     });
-
-    this.setState({ filteredBooks: filteredBooks });
   };
 
-  componentDidMount() {
-    this.filterColors();
-  }
-  componentDidUpdate() {
-    this.booklist = this.state.filteredBooks.map(book => {
-      return <BookRow book={book} filtercolor={this.filterColors} />;
+  getbooklist = () => {
+    let filterlist = this.state.filteredBooks;
+    if (this.props.match.params.color) {
+      filterlist = this.filterColor();
+    }
+
+    return filterlist.map(book => {
+      return <BookRow book={book} filter={this.props.filter} />;
     });
-  }
+  };
 
-  filter = this.state.filteredBooks.filter(book => {
-    return book.color.toLowerCase().includes(this.props.match.params.color);
-  });
-
-  booklist = this.filter.map(book => {
-    return <BookRow book={book} filtercolor={this.filterColors} />;
-  });
   render() {
     return (
       <div>
-        <SearchBar onChange={this.filterBooks} />
-        {this.booklist}
+        <SearchBar filter={this.filterBooks} />
+        {this.getbooklist()}
       </div>
     );
   }

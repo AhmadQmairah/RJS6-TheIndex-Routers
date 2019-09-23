@@ -32,11 +32,12 @@ class App extends Component {
       );
       const authors = await this.fetchAllAuthors();
       const books = response.data;
-      console.log(books);
+
       this.setState({
         authors: authors,
         loading: false,
-        books: books
+        books: books,
+        filteredBooks: books
       });
     } catch (err) {
       console.error(err);
@@ -53,7 +54,13 @@ class App extends Component {
           <Route path="/authors/:authorID" component={AuthorDetail} />
           <Route
             path="/booklist"
-            render={props => <BookList {...props} books={this.state.books} />}
+            render={props => (
+              <BookList
+                {...props}
+                books={this.state.books}
+                filterBooks={this.filterBooks}
+              />
+            )}
           />
           <Route
             path="/authors/"
