@@ -52,16 +52,7 @@ class App extends Component {
         <Switch>
           <Redirect exact from="/" to="/authors" />
           <Route path="/authors/:authorID" component={AuthorDetail} />
-          <Route
-            path="/booklist"
-            render={props => (
-              <BookList
-                {...props}
-                books={this.state.books}
-                filterBooks={this.filterBooks}
-              />
-            )}
-          />
+
           <Route
             path="/authors/"
             render={props => (
@@ -69,8 +60,14 @@ class App extends Component {
             )}
           />
           <Route
-            path="/books/:color/"
-            render={props => <BookList {...props} books={this.state.books} />}
+            path="/books/:color?/"
+            render={props => (
+              <BookList
+                {...props}
+                books={this.state.books}
+                filterBooks={this.filterBooks}
+              />
+            )}
           />
         </Switch>
       );
